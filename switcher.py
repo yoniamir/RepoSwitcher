@@ -28,14 +28,23 @@ class SwitchCommand(sublime_plugin.WindowCommand):
     return repos
 
   def openInNewWindow(self, path):
-    try:
-      subprocess.Popen(['sub', '.'], cwd=path)
-    except:
+    if sublime.platform() == 'windows':
       try:
-        subprocess.Popen(['subl', '.'], cwd=path)
+        subprocess.Popen(['subl', '.'], cwd=path, shell=True)
       except:
         try:
-          subprocess.Popen(['sublime', '.'], cwd=path)
+          subprocess.Popen(['sublime', '.'], cwd=path, shell=True)
         except:
-          subprocess.Popen(['/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl', '.'], cwd=path)
+          subprocess.Popen(['/Program Files/Sublime Text 3/sublime_text.exe', '.'], cwd=path, shell=True)
+    else:
+      try:
+        subprocess.Popen(['sub', '.'], cwd=path)
+      except:
+        try:
+          subprocess.Popen(['subl', '.'], cwd=path)
+        except:
+          try:
+            subprocess.Popen(['sublime', '.'], cwd=path)
+          except:
+            subprocess.Popen(['/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl', '.'], cwd=path)
 
